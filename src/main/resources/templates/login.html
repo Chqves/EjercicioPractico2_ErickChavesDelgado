@@ -1,39 +1,41 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>Login - Plataforma de Eventos</title>
-        <meta charset="UTF-8"/>
-        <link th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
-    </head>
+    <head th:replace="~{general/fragmentos :: head}"/>
     <body class="bg-light">
         <div class="row justify-content-center mt-5">
             <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header bg-primary text-white text-center">
-                        <h4>Plataforma de Eventos</h4>
+                <div class="card shadow">
+                    <div class="card-header text-white text-center py-3" style="background-color:#1a1a2e;">
+                        <h4 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Plataforma de Eventos</h4>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <form method="POST" th:action="@{/login}">
                             <div class="mb-3">
-                                <label class="form-label">Correo electrónico</label>
-                                <input type="text" name="username" class="form-control" required/>
+                                <label class="form-label fw-semibold">
+                                    <i class="fas fa-envelope me-1"></i>Correo electrónico
+                                </label>
+                                <input type="text" name="username" class="form-control" placeholder="correo@ejemplo.com" required/>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Contraseña</label>
-                                <input type="password" name="password" class="form-control" required/>
+                            <div class="mb-4">
+                                <label class="form-label fw-semibold">
+                                    <i class="fas fa-key me-1"></i>Contraseña
+                                </label>
+                                <input type="password" name="password" class="form-control" placeholder="••••••••" required/>
                             </div>
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Ingresar</button>
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Ingresar
+                                </button>
                             </div>
                         </form>
                     </div>
                 </div>
                 <div th:if="${param.error}" class="alert alert-danger mt-3 text-center">
-                    Correo o contraseña incorrectos.
+                    <i class="fas fa-exclamation-circle me-1"></i>Correo o contraseña incorrectos.
                 </div>
                 <div th:if="${param.logout}" class="alert alert-success mt-3 text-center">
-                    Sesión cerrada correctamente.
+                    <i class="fas fa-check-circle me-1"></i>Sesión cerrada correctamente.
                 </div>
             </div>
         </div>

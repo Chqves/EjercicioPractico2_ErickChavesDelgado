@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head}"/>
+    <body>
+        <header th:replace="~{general/fragmentos :: encabezado}"/>
+        <section th:replace="~{general/fragmentos :: mensajes}"/>
+
+        <div class="container my-4">
+            <h4 class="mb-4"><i class="fas fa-search me-2"></i>Consultas Avanzadas</h4>
+
+            <!-- Pestañas de consultas -->
+            <ul class="nav nav-tabs mb-4" id="tabConsultas">
+                <li class="nav-item">
+                    <a class="nav-link active" data-bs-toggle="tab" href="#tabEstado">Por Estado</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#tabFechas">Por Fechas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#tabNombre">Por Nombre</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-bs-toggle="tab" href="#tabPerfil">Miembros por Perfil</a>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <!-- Consulta 1: Por estado -->
+                <div class="tab-pane fade show active" id="tabEstado">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <form th:action="@{/busqueda/porEstado}" method="post" class="row g-3 align-items-end">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Estado del evento</label>
+                                    <select name="estado" class="form-select">
+                                        <option value="true">Activos</option>
+                                        <option value="false">Inactivos</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-search me-1"></i>Buscar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consulta 2: Por rango de fechas -->
+                <div class="tab-pane fade" id="tabFechas">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <form th:action="@{/busqueda/porFechas}" method="post" class="row g-3 align-items-end">
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold">Fecha inicio</label>
+                                    <input type="date" name="fechaInicio" class="form-control" required/>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-semibold">Fecha fin</label>
+                                    <input type="date" name="fechaFin" class="form-control" required/>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-search me-1"></i>Buscar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consulta 3: Por nombre parcial -->
+                <div class="tab-pane fade" id="tabNombre">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <form th:action="@{/busqueda/porNombre}" method="post" class="row g-3 align-items-end">
+                                <div class="col-md-5">
+                                    <label class="form-label fw-semibold">Nombre (parcial)</label>
+                                    <input type="text" name="texto" class="form-control" placeholder="Ej: Tech" required/>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-search me-1"></i>Buscar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consulta 4: Miembros por perfil -->
+                <div class="tab-pane fade" id="tabPerfil">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <form th:action="@{/busqueda/miembrosPorPerfil}" method="post" class="row g-3 align-items-end">
+                                <div class="col-md-4">
+                                    <label class="form-label fw-semibold">Perfil</label>
+                                    <select name="idPerfil" class="form-select" required>
+                                        <option value="">Seleccione...</option>
+                                        <option th:each="p : ${perfiles}" th:value="${p.idPerfil}" th:text="${p.titulo}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-search me-1"></i>Buscar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resultados de eventos -->
+            <div th:if="${eventos != null}" class="card mt-3">
+                <div class="card-header bg-dark text-white">
+                    <h6 class="mb-0">
+                        <i class="fas fa-list me-2"></i>Resultados
+                        <span th:if="${estadoBuscado}" class="ms-2 badge bg-info">[[${estadoBuscado}]]</span>
+                        <span th:if="${textoBuscado}" class="ms-2 badge bg-info">"[[${textoBuscado}]]"</span>
+                        <span th:if="${fechaInicio}" class="ms-2 badge bg-info">[[${fechaInicio}]] → [[${fechaFin}]]</span>
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover" th:if="${!eventos.empty}">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Fecha</th>
+                                <th>Aforo</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="ev : ${eventos}">
+                                <td>[[${ev.titulo}]]</td>
+                                <td>[[${ev.fechaEvento}]]</td>
+                                <td>[[${ev.aforo}]]</td>
+                                <td>
+                                    <span th:if="${ev.habilitado}" class="badge-estado-activo">Activo</span>
+                                    <span th:unless="${ev.habilitado}" class="badge-estado-inactivo">Inactivo</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div th:if="${eventos.empty}" class="alert alert-warning">No se encontraron resultados.</div>
+                </div>
+            </div>
+
+            <!-- Resultados de miembros por perfil -->
+            <div th:if="${miembrosEncontrados != null}" class="card mt-3">
+                <div class="card-header bg-dark text-white">
+                    <h6 class="mb-0"><i class="fas fa-users me-2"></i>Miembros encontrados</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover" th:if="${!miembrosEncontrados.empty}">
+                        <thead>
+                            <tr><th>Nombre</th><th>Correo</th><th>Perfil</th><th>Estado</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="m : ${miembrosEncontrados}">
+                                <td>[[${m.nombreCompleto}]]</td>
+                                <td>[[${m.correoElectronico}]]</td>
+                                <td>[[${m.perfil?.titulo}]]</td>
+                                <td>
+                                    <span th:if="${m.habilitado}" class="badge-estado-activo">Activo</span>
+                                    <span th:unless="${m.habilitado}" class="badge-estado-inactivo">Inactivo</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div th:if="${miembrosEncontrados.empty}" class="alert alert-warning">No se encontraron miembros.</div>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="~{general/fragmentos :: pie}"/>
+    </body>
+</html>

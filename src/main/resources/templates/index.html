@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+    <head th:replace="~{general/fragmentos :: head}"/>
+    <body>
+        <header th:replace="~{general/fragmentos :: encabezado}"/>
+        <section th:replace="~{general/fragmentos :: mensajes}"/>
+
+        <div class="container my-5">
+            <h3 class="mb-4"><i class="fas fa-calendar-check me-2"></i>Eventos Disponibles</h3>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col" th:each="ev : ${eventosDisponibles}">
+                    <div class="card h-100">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">[[${ev.titulo}]]</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">[[${ev.resumen}]]</p>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-calendar me-2 text-primary"></i>[[${ev.fechaEvento}]]</li>
+                                <li><i class="fas fa-users me-2 text-primary"></i>Aforo: [[${ev.aforo}]] personas</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <span class="badge-estado-activo">Activo</span>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${eventosDisponibles == null or eventosDisponibles.empty}" class="col-12">
+                    <div class="alert alert-info">No hay eventos disponibles en este momento.</div>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="~{general/fragmentos :: pie}"/>
+    </body>
+</html>
