@@ -15,6 +15,7 @@
     <description>Plataforma de Reservas de Eventos - Ejercicio Práctico 2</description>
     <properties>
         <java.version>21</java.version>
+        <start-class>com.eventosapp.plataforma.PlataformaApplication</start-class>
     </properties>
     <dependencies>
         <dependency>
