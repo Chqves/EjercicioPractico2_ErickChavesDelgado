@@ -10,3 +10,4 @@ public class PlataformaApplication {
         SpringApplication.run(PlataformaApplication.class, args);
     }
 }
+
